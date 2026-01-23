@@ -19,15 +19,15 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        // Цей код передає категорії в твій layout автоматично
-        View::composer('layouts.rada', function ($view) {
-            $view->with('menuCategories', Category::whereNull('parent_id')
-                ->with('children')
-                ->orderBy('pos')
-                ->get()
-            );
-        });
-    }
+   public function boot(): void
+{
+    View::composer('*', function ($view) {
+        $menuCategories = Category::with('children')
+            ->whereNull('parent_id')
+            ->orderBy('pos')
+            ->get();
+
+        $view->with('menuCategories', $menuCategories);
+    });
+}
 }
