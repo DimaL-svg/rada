@@ -350,17 +350,7 @@ return [
         'icon_color' => 'red',
     ],
 
-    ['header' => 'НАЛАШТУВАННЯ ПРОФІЛЮ'],
-    [
-        'text' => 'Мій профіль',
-        'route'  => 'profile.edit',
-        'icon' => 'fas fa-fw fa-user',
-    ],
-    [
-        'text' => 'Змінити пароль',
-        'url'  => 'profile', 
-        'icon' => 'fas fa-fw fa-lock',
-    ],
+   
 ],
 
     /*

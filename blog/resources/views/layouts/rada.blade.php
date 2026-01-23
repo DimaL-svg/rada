@@ -47,18 +47,18 @@
         <!-- Содержимое сайдбара -->
         <div class="sidebar-content">
             <ul class="sidebar-content-ul">
-@auth
+        @auth
             <li>
-                <a href="{{ route('adminpanel') }}" style="color: #ffc107; font-weight: bold;">Панель адміна</a>
+                <a href="{{ route('adminpanel') }}">Панель адміна</a>
             </li>
-            <li>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
-                        Вихід ({{ Auth::user()->name }})
-                    </a>
-                </form>
-            </li>
+<li>
+    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+        @csrf
+        <button type="submit" class="logout-button">
+            Вихід
+        </button>
+    </form>
+</li>
         @else
             <li>
                 <a href="{{ route('login') }}">Авторизація</a>

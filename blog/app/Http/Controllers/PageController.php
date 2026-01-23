@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Article;
-class PageController
+use App\Models\Category;
+
+class PageController extends Controller
 {
+    // Головна сторінка для людей
     public function rada()
-{
+    {
+        $articles = Article::where('is_active', 1)->latest()->paginate(10);
+        return view('static.posts', compact('articles'));
+    }
 
-$articles = Article::where('is_active', 1)->latest()->paginate(10);
-
-    return view('static.posts', compact('articles'));
-}
-public function adminIndex()
-{
-    $articles = Article::where('is_active', 1)
-    ->latest('created_at') // Використовуємо created_at замість date
-    ->paginate(10);
-}
+    // Головна сторінка адмінки (Дашборд)
+    public function adminIndex()
+    {
+        $stats = [
+            'total_articles' => Article::count(),
+            'total_categories' => Category::count(),
+        ];
+        
+        return view('adminlte::page', compact('stats'));
+    }
 }

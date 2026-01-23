@@ -26,11 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('admin/articles', ArticleController::class)->names('admin.articles');
 
     // Профіль
-    Route::controller(ProfileController::class)->group(function () {
-        Route::get('/profile', 'edit')->name('profile.edit');
-        Route::patch('/profile', 'update')->name('profile.update');
-        Route::delete('/profile', 'destroy')->name('profile.destroy');
-    });
+ 
 
     // Завантаження файлів
     Route::post('/admin/upload-file', [UploadController::class, 'upload'])->name('admin.upload');

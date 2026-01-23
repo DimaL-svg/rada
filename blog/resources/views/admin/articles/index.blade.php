@@ -3,7 +3,7 @@
 @section('title', 'Список статей')
 
 @section('content_header')
-    <h1>Керування статтями (Всього: {{ $articles->total() }})</h1>
+    <h1>Керування статтями</h1>
      <div class="card-tools ml-auto">
                 <a href="{{ route('admin.articles.create') }}" class="btn btn-success btn-sm">
                     <i class="fas fa-plus"></i> Додати новий запис
@@ -22,7 +22,6 @@
 <table class="table table-bordered table-hover">
     <thead class="thead-dark">
         <tr>
-            <th style="width: 50px">ID</th>
             <th>Повний перегляд публікації</th>
             <th style="width: 150px">Категорія</th>
             <th style="width: 120px">Дії</th>
@@ -31,7 +30,6 @@
     <tbody>
         @foreach($articles as $article)
             <tr>
-                <td>{{ $article->id }}</td>
                 <td>
                     {{-- Відображаємо заголовок як у тебе на скріншоті --}}
                     <div class="p-2 mb-2" style="background-color: #00a65a; color: white; font-weight: bold; display: flex; justify-content: space-between;">
