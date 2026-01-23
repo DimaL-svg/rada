@@ -4,23 +4,30 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Article; // Додано для коректної роботи index та destroy
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-
 class CategoryController extends Controller
 {
- public function index() 
+    /**
+     * СПИСОК КАТЕГОРІЙ
+     * Відображає всі категорії (пункти меню) для їхнього редагування чи видалення.
+     */
+    public function index() 
     {
-        $articles = Article::where('is_active', 1)
-            ->latest('created_at')
-            ->paginate(10);
+        // Отримуємо категорії з підрахунком статей у кожній
+        $categories = Category::withCount('articles')
+            ->orderBy('pos')
+            ->get();
 
-        // menuCategories більше не треба передавати вручну!
-        return view('rada', compact('articles'));
+        return view('admin.categories.index', compact('categories'));
     }
 
-    // Создание новой категории (Меню)
+    /**
+     * СТВОРЕННЯ КАТЕГОРІЇ
+     * Додає новий пункт у меню сайту та автоматично генерує URL (slug).
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -28,30 +35,34 @@ class CategoryController extends Controller
         ]);
 
         Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name), // Авто-генерация ссылки
-            'parent_id' => $request->parent_id,  // Если это подпункт меню
-            'pos' => $request->pos ?? 0,         // Порядок в меню
+            'name'      => $request->name,
+            'slug'      => Str::slug($request->name), // Авто-генерація посилання
+            'parent_id' => $request->parent_id,       // Для підпунктів меню
+            'pos'       => $request->pos ?? 0,        // Позиція (черговість) у меню
         ]);
 
-        return redirect()->back()->with('success', 'Категория успешно добавлена!');
+        return redirect()->back()->with('success', 'Категорію успішно додано!');
     }
 
-    // Удаление категории
+    /**
+     * ВИДАЛЕННЯ КАТЕГОРІЇ
+     * Дозволяє видалити категорію лише якщо в ній немає жодної статті.
+     */
     public function destroy($id)
-{
-    $category = Category::withCount('articles')->findOrFail($id);
+    {
+        // Знаходимо категорію разом із кількістю прив'язаних статей
+        $category = Category::withCount('articles')->findOrFail($id);
 
-    if ($category->articles_count > 0) {
-        return redirect()->back()->with(
-            'error',
-            'Нельзя удалить категорию, в которой есть статьи!'
-        );
+        // Захист від видалення категорій з контентом
+        if ($category->articles_count > 0) {
+            return redirect()->back()->with(
+                'error',
+                'Неможливо видалити категорію, у якій є статті!'
+            );
+        }
+
+        $category->delete();
+
+        return redirect()->back()->with('success', 'Категорію видалено!');
     }
-
-    $category->delete();
-
-    return redirect()->back()->with('success', 'Категория удалена!');
-}
-
 }
