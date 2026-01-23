@@ -1,4 +1,4 @@
-@extends('layouts.rada')
+@extends('templates.rada')
 
 {{-- Пункт 2.3: Динамический заголовок для Google --}}
 @section('title', 'Головна сторінка — Рада директорів')

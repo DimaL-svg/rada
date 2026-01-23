@@ -20,18 +20,6 @@ class CategoryController extends Controller
         return view('rada', compact('articles'));
     }
 
-    public function show($slug)
-    {
-        $category = Category::where('slug', $slug)->firstOrFail();
-
-        $articles = Article::where('category_id', $category->id)
-            ->where('is_active', 1)
-            ->latest('created_at')
-            ->paginate(15);
-
-        return view('static.article_show', compact('category', 'articles'));
-    }
-
     // Создание новой категории (Меню)
     public function store(Request $request)
     {

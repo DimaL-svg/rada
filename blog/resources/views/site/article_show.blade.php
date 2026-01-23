@@ -1,4 +1,4 @@
-@extends('layouts.rada')
+@extends('templates.rada')
 
 {{-- Якщо статей багато, беремо заголовок першої або назву категорії --}}
 @section('title', $category->name ?? 'Перегляд розділу')

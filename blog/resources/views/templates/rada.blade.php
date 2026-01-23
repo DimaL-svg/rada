@@ -49,7 +49,7 @@
             <ul class="sidebar-content-ul">
         @auth
             <li>
-                <a href="{{ route('adminpanel') }}">Панель адміна</a>
+                <a href="{{ route('admin') }}">Панель адміна</a>
             </li>
 <li>
     <form method="POST" action="{{ route('logout') }}" class="logout-form">

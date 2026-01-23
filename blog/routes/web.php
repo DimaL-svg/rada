@@ -1,33 +1,37 @@
 <?php
 
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\PageController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\UploadController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategory; 
+use App\Http\Controllers\Auth\LoginController;
 
 // Публічні маршрути
+// --- ПУБЛІЧНІ МАРШРУТИ (Для людей) ---
 Route::get('/', [PageController::class, 'rada'])->name('rada');
-Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
+Route::get('/category/{slug}', [PageController::class, 'showCategory'])->name('category.show');
 
-// Авторизація
+// --- АВТОРИЗАЦІЯ ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Адмін-панель
-Route::middleware(['auth'])->group(function () {
-    // Головна та панель
-    Route::get('/admin', [PageController::class, 'adminIndex'])->name('admin');
-    Route::get('/adminpanel', [PageController::class, 'adminIndex'])->name('adminpanel'); // Можна об'єднати
 
-    // Статті (Resource)
-    Route::resource('admin/articles', ArticleController::class)->names('admin.articles');
+// --- АДМІН-ПАНЕЛЬ (Тільки для тебе) ---
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    
+    // Головна сторінка адмінки (Дашборд)
+    Route::get('/', [DashboardController::class, 'adminindex'])->name('admin');
 
-    // Профіль
- 
+    // Статті (Повний набір: список, створення, редагування, видалення)
+    // Оскільки ми в групі з префіксом 'admin', шлях буде просто 'articles'
+    Route::resource('articles', ArticleController::class)->names('admin.articles');
 
-    // Завантаження файлів
-    Route::post('/admin/upload-file', [UploadController::class, 'upload'])->name('admin.upload');
+    // Категорії/Меню
+    Route::resource('categories', CategoryController::class)->names('admin.categories');
+
+    // Завантаження файлів для редактора статей
+    Route::post('upload-file', [UploadController::class, 'upload'])->name('admin.upload');
 });
