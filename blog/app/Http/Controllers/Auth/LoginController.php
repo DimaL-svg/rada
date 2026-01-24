@@ -13,7 +13,7 @@ class LoginController extends Controller
      * Показує форму авторизації (логін/пароль).
      */
     public function showLoginForm() {
-        return view('auth.login');
+        return view('Auth.LoginForm');
     }
 
     /**

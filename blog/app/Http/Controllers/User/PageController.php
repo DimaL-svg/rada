@@ -12,7 +12,7 @@ class PageController extends Controller
     public function rada()
     {
         $articles = Article::where('is_active', 1)->latest()->paginate(10);
-        return view('site.posts', compact('articles'));
+        return view('Site.ShowArticle', compact('articles'));
     }
 
     // Показ конкретної категорії 
@@ -23,8 +23,8 @@ class PageController extends Controller
         $articles = Article::where('category_id', $category->id)
             ->where('is_active', 1)
             ->latest()
-            ->paginate(15);
+            ->paginate(5);
 
-        return view('site.article_show', compact('category', 'articles'));
+        return view('Site.ShowArticle', compact('category', 'articles'));
     }
 }

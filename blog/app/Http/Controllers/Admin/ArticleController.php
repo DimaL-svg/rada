@@ -18,7 +18,7 @@ class ArticleController extends Controller
     {
         $articles = Article::with('category')->latest()->paginate(10);
         
-        return view('admin.articles.index', compact('articles'));
+        return view('admin.articles.ShowArticle', compact('articles'));
     }
 
     /**
@@ -28,7 +28,7 @@ class ArticleController extends Controller
     public function create()
     {
         $categories = Category::all(); 
-        return view('admin.articles.create', compact('categories'));
+        return view('admin.articles.CreateArticle', compact('categories'));
     }
 
     /**
@@ -62,7 +62,7 @@ class ArticleController extends Controller
         $article = Article::findOrFail($id);
         $categories = Category::all(); 
         
-        return view('admin.articles.edit', compact('article', 'categories'));
+        return view('admin.articles.EditArticle', compact('article', 'categories'));
     }
 
     /**
