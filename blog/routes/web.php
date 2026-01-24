@@ -23,7 +23,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     
     // Головна сторінка адмінки (Дашборд)
-    Route::get('/', [DashboardController::class, 'adminindex'])->name('admin');
+    Route::get('/', [DashboardController::class, 'index'])->name('admin');
 
     // Статті (Повний набір: список, створення, редагування, видалення)
     // Оскільки ми в групі з префіксом 'admin', шлях буде просто 'articles'
