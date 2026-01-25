@@ -63,9 +63,9 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo' => '<div style="text-align: center; width: 100%;">Керування сайтом</div>',
+    'logo_img' => null,
+    'logo_img_class' => 'd-none',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'Admin Logo',
@@ -257,7 +257,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => '/admin',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -299,21 +299,10 @@ return [
     */
 
  'menu' => [
-    // Пошук у верхній панелі
-    [
-        'type' => 'navbar-search',
-        'text' => 'Пошук статей...',
-        'topnav_right' => true,
-    ],
     [
         'type' => 'fullscreen-widget',
         'topnav_right' => true,
-    ],
-
-    // Сайдбар
-    [
-        'type' => 'sidebar-menu-search',
-        'text' => 'Швидкий пошук',
+        'classes_body' => 'layout-fixed',
     ],
     
     ['header' => 'КОНТЕНТ'],
@@ -326,7 +315,6 @@ return [
         'text' => 'Усі статті',
         'url'  => 'admin/articles', // Пункт 2.1
         'icon' => 'fas fa-fw fa-file-alt',
-        'label' => 1669, 
         'label_color' => 'success',
     ],
 

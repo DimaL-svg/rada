@@ -16,13 +16,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Рахуємо кількість записів у базі даних
-        $stats = [
-            'total_articles'   => Article::count(),   // Всього твоїх 1669+ статей
-            'total_categories' => Category::count(),  // Скільки пунктів у меню
-        ];
-        
-        // Віддаємо дані у стандартний шаблон AdminLTE
-        return view('adminlte::page', compact('stats'));
+       
+       return redirect()->route('admin.articles.index');
     }
 }

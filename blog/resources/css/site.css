@@ -145,9 +145,8 @@ margin-right: 20px;
 .flex-article {
     display: flex;
 }
-.article-body table {
-    width: 100% !important;
-    max-width: 100% !important;
+.article-body tr {
+
 }
 
 
@@ -166,11 +165,23 @@ margin-right: 20px;
 .article-body, 
 .article-body p, 
 .article-body span, 
-.article-body td
+.article-body td,   
 .article-body h2 {
-    font-size: 14px !important; /* Або 11px, як ти хотів */
+    font-size: 14px !important; 
     line-height: 1.5 !important;
     font-family: Arial, sans-serif !important;
+}
+
+/* Оптимізований блок таблиць */
+.article-body table {
+    width: auto !important; 
+}
+
+.article-body td {
+    width: auto !important;
+    border: 1px solid #ccc !important;
+    padding: 8px;
+    vertical-align: top; /* Щоб текст не "стрибав" при різній висоті картинок */
 }
 
 h2{
@@ -227,24 +238,3 @@ height: 15px;
 background-color:#09C487 ;
 }
 
-.article-body table {
-width: auto !important;           
-}
-
-
-.article-preview-content img {
-        max-width: 100%; /* Картинки підлаштовуються під ширину */
-        height: auto;
-    }
-    .article-preview-content table {
-        width: 100% !important; /* Твої складні таблиці теж будуть на всю ширину */
-        border-collapse: collapse;
-    }
-    /* Стилізуємо скроллбар, щоб було симпатичніше */
-    .article-preview-content::-webkit-scrollbar {
-        width: 6px;
-    }
-    .article-preview-content::-webkit-scrollbar-thumb {
-        background-color: #00a65a;
-        border-radius: 10px;
-    }

@@ -19,19 +19,18 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-// --- АДМІН-ПАНЕЛЬ (Тільки для тебе) ---
+// --- АДМІН-ПАНЕЛЬ ---
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     
-    // Головна сторінка адмінки (Дашборд)
-    Route::get('/', [DashboardController::class, 'index'])->name('admin');
+    // Редірект на сторінку з статтями
+   Route::get('/', [DashboardController::class, 'index'])->name('admin');
 
-    // Статті (Повний набір: список, створення, редагування, видалення)
-    // Оскільки ми в групі з префіксом 'admin', шлях буде просто 'articles'
+    // Статті
     Route::resource('articles', ArticleController::class)->names('admin.articles');
 
-    // Категорії/Меню
-    Route::resource('categories', CategoryController::class)->names('admin.categories');
+    // Категорії (Використовуємо імпортований AdminCategory)
+    Route::resource('categories', AdminCategory::class)->names('admin.categories');
 
-    // Завантаження файлів для редактора статей
+    // Завантаження файлів
     Route::post('upload-file', [UploadController::class, 'upload'])->name('admin.upload');
 });
