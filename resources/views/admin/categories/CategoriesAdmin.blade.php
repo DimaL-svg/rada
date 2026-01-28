@@ -2,128 +2,80 @@
 
 @section('content')
 <div class="card">
-
-    {{-- HEADER --}}
+    {{-- ШАПКА: Заголовок та кнопка створення --}}
     <div class="card-header">
         <h3 class="card-title">Керування категоріями меню</h3>
-
-        <a href="{{ route('admin.categories.create') }}"
-           class="btn btn-primary float-right">
-            Додати категорію
+        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary float-right">
+             Додати категорію
         </a>
     </div>
 
-    {{-- BODY --}}
     <div class="card-body p-0">
         <table class="table table-striped">
-
-            {{-- TABLE HEAD --}}
             <thead>
                 <tr>
-                    <th style="width: 30px"></th>
+                    <th style="width: 30px"></th> {{-- Стовпчик для іконки перетягування --}}
                     <th>Назва</th>
                     <th>Рівень</th>
                     <th style="width: 150px">Дії</th>
                 </tr>
             </thead>
 
-            {{-- SORTABLE BODY --}}
+            {{-- ТІЛО ТАБЛИЦІ: id потрібен для ініціалізації SortableJS --}}
             <tbody id="sortable-categories">
 
             @foreach ($categories as $category)
-
-                {{-- ===============================
-                     ГОЛОВНА КАТЕГОРІЯ
-                ================================ --}}
-                <tr data-id="{{ $category->id }}"
-                    class="main-category table-secondary">
-
-                    {{-- Drag handle (тільки за нього можна тягнути) --}}
-                    <td class="drag-handle-main text-primary"
-                        style="cursor: move;">
+                {{-- ГОЛОВНА КАТЕГОРІЯ: має спеціальний клас main-category для відокремлення логіки сортування --}}
+                <tr data-id="{{ $category->id }}" class="main-category table-secondary">
+                    
+                    {{-- Ручка перетягування (Drag handle) --}}
+                    <td class="drag-handle-main text-primary" style="cursor: move;">
                         <i class="fas fa-arrows-alt-v"></i>
                     </td>
 
-                    {{-- Назва --}}
-                    <td>
-                        <strong>{{ $category->name }}</strong>
-                    </td>
+                    <td><strong>{{ $category->name }}</strong></td>
 
-                    {{-- Тип --}}
-                    <td>
-                        <span class="badge badge-primary">Головна</span>
-                    </td>
+                    <td><span class="badge badge-primary">Головна</span></td>
 
-                    {{-- Дії --}}
                     <td>
-                        <a href="{{ route('admin.categories.edit', $category->id) }}"
-                           class="btn btn-sm btn-info">
+                        <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-info">
                             <i class="fas fa-edit"></i>
                         </a>
-
-                        <form method="POST"
-                              action="{{ route('admin.categories.destroy', $category->id) }}"
-                              class="d-inline"
-                              onsubmit="return confirm('Ви впевнені?')">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        {{-- Видалення через форму (стандарт Laravel) --}}
+                        <form method="POST" action="{{ route('admin.categories.destroy', $category->id) }}" class="d-inline" onsubmit="return confirm('Ви впевнені?')">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>
 
-                {{-- ===============================
-                     ПІДКАТЕГОРІЇ
-                ================================ --}}
+                {{-- ПІДКАТЕГОРІЇ: вкладений цикл для виводу дітей поточної категорії --}}
                 @foreach ($category->children as $child)
-
-                    <tr data-id="{{ $child->id }}"
-                        data-parent="{{ $category->id }}"
+                    <tr data-id="{{ $child->id }}" 
+                        data-parent="{{ $category->id }}" {{-- Прив'язка до батька для JS-перевірок --}}
                         class="child-row bg-white">
 
-                        {{-- Drag handle підкатегорії --}}
-                        <td class="drag-handle-child text-muted"
-                            style="cursor: move; padding-left: 20px;">
+                        {{-- Ручка для підкатегорії --}}
+                        <td class="drag-handle-child text-muted" style="cursor: move; padding-left: 20px;">
                             <i class="fas fa-grip-lines"></i>
                         </td>
 
-                        {{-- Назва (без стрілок, лише відступ) --}}
-                        <td style="padding-left: 40px;"
-                            class="text-muted">
-                            {{ $child->name }}
-                        </td>
+                        {{-- Відступ зліва для візуалізації ієрархії --}}
+                        <td style="padding-left: 40px;" class="text-muted">{{ $child->name }}</td>
 
-                        {{-- Тип --}}
-                        <td>
-                            <small class="text-muted">Підкатегорія</small>
-                        </td>
+                        <td><small class="text-muted">Підкатегорія</small></td>
 
-                        {{-- Дії --}}
                         <td>
-                            <a href="{{ route('admin.categories.edit', $child->id) }}"
-                               class="btn btn-sm btn-default">
+                            <a href="{{ route('admin.categories.edit', $child->id) }}" class="btn btn-sm btn-default">
                                 <i class="fas fa-edit"></i>
                             </a>
-
-                            <form method="POST"
-                                  action="{{ route('admin.categories.destroy', $child->id) }}"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Видалити підкатегорію?')">
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            <form method="POST" action="{{ route('admin.categories.destroy', $child->id) }}" class="d-inline" onsubmit="return confirm('Видалити підкатегорію?')">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>
-
                 @endforeach
-
             @endforeach
 
             </tbody>
@@ -137,93 +89,66 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Головний контейнер таблиці
     const tableBody = document.getElementById('sortable-categories');
 
-    // Ініціалізація drag & drop
+    // Запускаємо окремі налаштування для головних та дочірніх категорій
     initMainCategories(tableBody);
     initChildCategories(tableBody);
 });
 
-/* =====================================================
-   1️⃣ Drag & Drop ГОЛОВНИХ категорій
-===================================================== */
+/* 1️⃣ Сортування ГОЛОВНИХ категорій */
 function initMainCategories(container) {
-
     Sortable.create(container, {
         animation: 150,
-
-        // Перетягуються ТІЛЬКИ головні категорії
-        draggable: '.main-category',
-
-        // Тягнути можна ТІЛЬКИ за іконку
-        handle: '.drag-handle-main',
-
+        draggable: '.main-category', // Дозволяємо тягнути лише батьківські рядки
+        handle: '.drag-handle-main', // Тягнути можна лише за іконку стрілочок
+        
         onEnd(evt) {
-            // Коли рухаємо головну категорію —
-            // її підкатегорії повинні рухатись разом з нею
+            // Після того як перетягнули батька, автоматично підтягуємо його дітей під нього
             moveChildrenWithParent(evt.item);
-
-            // Зберігаємо новий порядок у БД
+            // Відправляємо новий порядок у БД
             saveOrder('.main-category');
         }
     });
 }
 
-/* =====================================================
-   2️⃣ Drag & Drop ПІДКАТЕГОРІЙ
-===================================================== */
+/* 2️⃣ Сортування ПІДКАТЕГОРІЙ всередині батька */
 function initChildCategories(container) {
-
     Sortable.create(container, {
         animation: 150,
+        draggable: '.child-row',      // Дозволяємо тягнути лише рядки підкатегорій
+        handle: '.drag-handle-child', // Своя ручка для перетягування
 
-        // Перетягуються тільки підкатегорії
-        draggable: '.child-row',
-
-        // Drag handle тільки іконка
-        handle: '.drag-handle-child',
-
-        // Забороняємо тягнути в іншу категорію
+        // Важливо: забороняємо перетягувати підкатегорію в групу іншого батька
         onMove(evt) {
             return evt.dragged.dataset.parent === evt.related.dataset.parent;
         },
 
         onEnd(evt) {
-            // Зберігаємо порядок лише для конкретного батька
             const parentId = evt.item.dataset.parent;
+            // Зберігаємо порядок лише для дітей цього конкретного батька
             saveOrder(`.child-row[data-parent="${parentId}"]`);
         }
     });
 }
 
-/* =====================================================
-   3️⃣ Переміщення підкатегорій разом з батьком
-===================================================== */
+/* 3️⃣ Функція-магніт: тримає дітей поруч із батьком при зміні позиції */
 function moveChildrenWithParent(parentRow) {
-
     const parentId = parentRow.dataset.id;
-
-    const children = document.querySelectorAll(
-        `.child-row[data-parent="${parentId}"]`
-    );
-
+    const children = document.querySelectorAll(`.child-row[data-parent="${parentId}"]`);
+    
     let lastRow = parentRow;
-
     children.forEach(child => {
-        lastRow.after(child);
+        lastRow.after(child); // Переміщуємо кожну дитину відразу після батька/попередньої дитини
         lastRow = child;
     });
 }
 
-/* =====================================================
-   4️⃣ Збереження порядку в БД
-===================================================== */
+/* 4️⃣ AJAX-запит: зберігає нову черговість (position) у базі даних */
 function saveOrder(selector) {
-
     const order = [];
 
+    // Збираємо всі ID та їх нові позиції на сторінці
     document.querySelectorAll(selector).forEach((row, index) => {
         order.push({
             id: row.dataset.id,
@@ -231,6 +156,7 @@ function saveOrder(selector) {
         });
     });
 
+    // Відправка на сервер через Fetch API
     fetch("{{ route('admin.categories.reorder') }}", {
         method: 'POST',
         headers: {

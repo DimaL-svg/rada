@@ -11,12 +11,9 @@ class DashboardController extends Controller
 {
     /**
      * ГОЛОВНА СТОРІНКА АДМІНКИ (Dashboard)
-     * Збирає загальну статистику по всьому сайту та відображає її
-     * на головному екрані AdminLTE.
      */
     public function index()
     {
-       
        return redirect()->route('admin.articles.index');
     }
 }

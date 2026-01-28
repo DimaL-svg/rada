@@ -7,12 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
-    use SoftDeletes; // Дозволяє видаляти статтю в "кошик" (deleted_at)
+    use SoftDeletes; 
 
-    // Вказуємо конкретну назву таблиці в базі даних
     protected $table = 'articles_laravel'; 
 
-    // Дозволяємо масове заповнення цих полів
+
     protected $fillable = [
         'category_id', 'title', 'content', 'slug',
         'seo_title', 'seo_desc', 'is_active'

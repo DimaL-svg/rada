@@ -12,18 +12,16 @@ class ArticleController extends Controller
 {
     /**
      * СПИСОК СТАТЕЙ
-     * Виводить таблицю всіх статей з пагінацією та назвами категорій.
      */
     public function index()
     {
         $articles = Article::with('category')->latest()->paginate(5);
-        
+
         return view('admin.articles.ShowArticle', compact('articles'));
     }
 
     /**
      * СТОРІНКА СТВОРЕННЯ
-     * Показує форму для написання нової статті.
      */
     public function create()
     {
@@ -33,7 +31,6 @@ class ArticleController extends Controller
 
     /**
      * ЗБЕРЕЖЕННЯ В БАЗУ
-     * Перевіряє дані та створює новий запис у таблиці статей.
      */
     public function store(Request $request)
     {
@@ -55,7 +52,6 @@ class ArticleController extends Controller
 
     /**
      * РЕДАГУВАННЯ
-     * Знаходить статтю за ID та відкриває форму для її зміни.
      */
     public function edit($id)
     {
@@ -67,7 +63,6 @@ class ArticleController extends Controller
 
     /**
      * ОНОВЛЕННЯ ДАНИХ
-     * Записує змінений текст та заголовок у вже існуючу статтю.
      */
     public function update(Request $request, $id)
     {
@@ -86,8 +81,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * ВИДАЛЕННЯ
-     * Назавжди видаляє статтю з бази даних.
+     * ВИДАЛЕННЯ (soft-delete - на майбутнє)
      */
     public function destroy($id)
     {

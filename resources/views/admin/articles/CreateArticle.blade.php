@@ -8,14 +8,18 @@
 
 @section('content')
 <div class="card card-success">
+    {{-- ФОРМА: Відправляє всі зібрані дані (заголовок, категорію, текст) у базу --}}
     <form action="{{ route('admin.articles.store') }}" method="POST">
-        @csrf
+        @csrf {{-- ЗАХИСТ: Без цього токена сервер заблокує відправку даних --}}
+        
         <div class="card-body">
+            {{-- ЗАГОЛОВОК: Простий текст, який стане назвою статті --}}
             <div class="form-group">
                 <label for="title">Заголовок статті</label>
                 <input type="text" name="title" class="form-control" placeholder="Введіть заголовок" required>
             </div>
 
+            {{-- КАТЕГОРІЯ: Користувач вибирає назву, але в базу летить тільки цифра (ID) --}}
             <div class="form-group">
                 <label for="category_id">Категорія</label>
                 <select name="category_id" class="form-control">
@@ -25,6 +29,7 @@
                 </select>
             </div>
 
+            {{-- РЕДАКТОР: Сюди TinyMCE запише готовий HTML-код (з усіма тегами та картинками) --}}
             <div class="form-group">
                 <label for="editor">Контент</label>
                 <textarea name="content" id="editor"></textarea>
@@ -55,8 +60,8 @@
     ],
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | link media table | align lineheight | checklist numlist bullist indent outdent | removeformat',
     
-    // Вибір документів з ПК
-    file_picker_types: 'file image media',
+    // ФУНКЦІЯ ВИБОРУ ФАЙЛІВ (PDF, DOC):
+    // Відкриває вікно на ПК -> Відправляє файл на сервер -> Отримує посилання -> Вставляє його в текст
     file_picker_callback: (callback, value, meta) => {
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
@@ -71,13 +76,16 @@
             fetch('{{ route("admin.upload") }}', { method: 'POST', body: formData })
                 .then(response => response.json())
                 .then(json => {
+                    // Результат: файл вже на сервері, у редакторі просто з'явилося посилання
                     if (json.location) { callback(json.location, { text: file.name }); }
                 });
         };
         input.click();
     },
 
-    // Завантаження фото (Drag&Drop)
+    // ФУНКЦІЯ КАРТИНОК (Drag&Drop):
+    // Спрацьовує миттєво, коли ти кидаєш фото в редактор. 
+    // Фото летить у папку /storage, а в текст вставляється шлях до нього.
     images_upload_url: '{{ route("admin.upload") }}',
     automatic_uploads: true,
     images_upload_handler: function (blobInfo) {

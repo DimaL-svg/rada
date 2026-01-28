@@ -10,13 +10,13 @@ use Illuminate\Http\Request;
 class PageController extends Controller
 {
     /**
-     * Головна сторінка — виводить останні 5 активних статей.
+     * Головна сторінка 
      */
     public function rada()
     {
         $articles = Article::where('is_active', 1)
             ->latest()
-            ->paginate(5); // Виставляємо 5 записів для головної сторінки
+            ->paginate(5); 
 
         $title = 'Головна сторінка'; 
 
@@ -24,24 +24,18 @@ class PageController extends Controller
     }
 
     /**
-     * Показ конкретної категорії — виводить 5 статей цієї категорії.
+     * Показ конкретної категорії 
      */
     public function showCategory($slug)
     {
-        // 1. Якщо клікнули на "головна" в меню (зі старих лінків), редиректимо на головний роут
         if ($slug === 'головна') {
             return redirect()->route('rada');
         }
-
-        // 2. Шукаємо категорію за слагом
         $category = Category::where('slug', $slug)->firstOrFail();
-        
-        // 3. Отримуємо статті цієї категорії з пагінацією по 5
         $articles = Article::where('category_id', $category->id)
             ->where('is_active', 1)
             ->latest()
-            ->paginate(5); // Виставляємо 5 записів для категорій
-
+            ->paginate(5); 
         return view('Site.ShowArticle', compact('category', 'articles'));
     }
 }
