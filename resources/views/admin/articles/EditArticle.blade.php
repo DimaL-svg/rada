@@ -61,9 +61,11 @@
     branding: false,
     plugins: [
       'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-      'checklist', 'mediaembed', 'advtable', 'advcode', 'typography', 'inlinecss'
+      'checklist', 'mediaembed', 'advtable', 'advcode', 'typography', 'inlinecss' 
     ],
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | link media table | align lineheight | checklist numlist bullist indent outdent | removeformat',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline | link  table | align lineheight | checklist numlist bullist indent outdent | removeformat',
+    //TODO: НАЛАГОДИТИ media
+    
     
     // --- 1. ЗАВАНТАЖЕННЯ ФАЙЛІВ (PDF, DOC) ---
     file_picker_callback: (callback, value, meta) => {
