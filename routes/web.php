@@ -8,15 +8,17 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController; 
 use App\Http\Controllers\Auth\LoginController;
-
+use App\Http\Controllers\User\UserHomeController;
+use App\Http\Controllers\User\UserCategoryController;
+use App\Http\Controllers\User\UserArticleController;
 /*
 |--------------------------------------------------------------------------
 | Публічні маршрути
 |--------------------------------------------------------------------------
 */
-Route::get('/', [PageController::class, 'rada'])->name('rada');
-Route::get('/category/{slug}', [PageController::class, 'showCategory'])->name('category.show');
-
+Route::get('/', [UserHomeController::class, 'index'])->name('index');
+Route::get('/category/{category:slug}', [UserCategoryController::class, 'showCategory'])->name('category.show');
+Route::get('/article/{article:slug}', [UserArticleController::class, 'showArticle'])->name('article.show');
 /*
 |--------------------------------------------------------------------------
 | Авторизація
@@ -46,3 +48,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Завантаження медіа 
     Route::post('upload-file', [UploadController::class, 'upload'])->name('upload');
 });
+
+
+
+
+
+
+
+
+
+
+
+
+

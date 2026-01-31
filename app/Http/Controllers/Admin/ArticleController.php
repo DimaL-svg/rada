@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Article;  
 use App\Models\Category;
 use Illuminate\Support\Str;
+use App\Http\Requests\Admin\ArticleRequest;
 
 class ArticleController extends Controller
 {
@@ -32,23 +33,16 @@ class ArticleController extends Controller
     /**
      * ЗБЕРЕЖЕННЯ В БАЗУ
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'category_id' => 'required|exists:categories,id', 
-        ]);
+public function store(ArticleRequest $request)
+{
+    // Якщо дані не валідні, код нижче навіть не запуститься
+    $data = $request->validated();
+    $data['slug'] = Str::slug($request->title);
 
-        Article::create([
-            'title' => $request->title,
-            'content' => $request->content,
-            'category_id' => $request->category_id,
-            'slug' => Str::slug($request->title), 
-        ]);
+    Article::create($data);
 
-        return redirect()->route('admin.articles.index')->with('success', 'Статтю успішно створено!');
-    }
+    return redirect()->route('admin.articles.index');
+}
 
     /**
      * РЕДАГУВАННЯ
@@ -64,21 +58,12 @@ class ArticleController extends Controller
     /**
      * ОНОВЛЕННЯ ДАНИХ
      */
-    public function update(Request $request, $id)
-    {
-        $article = Article::findOrFail($id);
-
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required', 
-            'category_id' => 'required|integer',
-        ]);
-
-        $article->update($validated);
-
-        return redirect()->route('admin.articles.index')
-            ->with('success', 'Статтю оновлено!');
-    }
+public function update(ArticleRequest $request, $id)
+{
+    $article = Article::findOrFail($id);
+    $article->update($request->validated());
+    return redirect()->route('admin.articles.index');
+}
 
     /**
      * ВИДАЛЕННЯ (soft-delete - на майбутнє)
@@ -88,6 +73,6 @@ class ArticleController extends Controller
         $article = Article::findOrFail($id);
         $article->delete();
 
-        return redirect()->route('admin.articles.index')->with('success', 'Статтю видалено!');
+        return redirect()->route('admin.articles.index');
     }
 }

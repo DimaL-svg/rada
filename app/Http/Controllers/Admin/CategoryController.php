@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
+use App\Http\Requests\Admin\CategoryRequest;
 class CategoryController extends Controller
 {
     /**
@@ -39,25 +39,19 @@ class CategoryController extends Controller
     /**
      * ЗБЕРЕЖЕННЯ НОВОЇ КАТЕГОРІЇ
      */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|unique:categories,name|max:255',
-            'parent_id' => 'nullable|exists:categories,id',
-        ]);
-        $lastPos = Category::where('parent_id', $request->parent_id)
-            ->max('pos') ?? 0;
+public function store(CategoryRequest $request)
+{
+    $data = $request->validated();
+    $data['slug'] = Str::slug($request->name);
+    
+    // Розрахунок позиції залишаємо тут або виносимо в Model Observer
+    $data['pos'] = Category::where('parent_id', $request->parent_id)->max('pos') + 1;
+    $data['is_active'] = 1;
 
-        Category::create([
-            'name'      => $request->name,
-            'slug'      => Str::slug($request->name), 
-            'parent_id' => $request->parent_id,
-            'pos'       => $lastPos + 1,
-            'is_active' => 1,
-        ]);
+    Category::create($data);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Категорію додано!');
-    }
+    return redirect()->route('admin.categories.index')->with('success', 'Категорію додано!');
+}
 
     /**
      * ФОРМА РЕДАГУВАННЯ
@@ -75,23 +69,17 @@ class CategoryController extends Controller
     /**
      * ОНОВЛЕННЯ ДАНИХ
      */
-    public function update(Request $request, $id)
-    {
-        $category = Category::findOrFail($id);
+public function update(CategoryRequest $request, $id)
+{
+    $category = Category::findOrFail($id);
+    
+    $data = $request->validated();
+    $data['slug'] = Str::slug($request->name);
+    
+    $category->update($data);
 
-        $request->validate([
-            'name' => 'required|max:255|unique:categories,name,' . $category->id,
-        ]);
-
-        $category->update([
-            'name'      => $request->name,
-            'slug'      => Str::slug($request->name),
-            'parent_id' => $request->parent_id,
-            'pos'       => $request->pos ?? 0,
-        ]);
-
-        return redirect()->route('admin.categories.index')->with('success', 'Категорія оновлена!');
-    }
+    return redirect()->route('admin.categories.index')->with('success', 'Категорія оновлена!');
+}
 
     /**
      * ВИДАЛЕННЯ КАТЕГОРІЇ

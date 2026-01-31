@@ -14,15 +14,9 @@
         </div>
     </header>
 
-    <div class="DateTime">
-        {{-- ДАТА: Використовує Carbon для виводу поточної дати українською мовою --}}
-        <?php
-            use Carbon\Carbon;
-            date_default_timezone_set('Europe/Kiev');
-            Carbon::setLocale('uk');
-            echo Carbon::now()->translatedFormat('d F, Y року');
-        ?>
-    </div>
+<div class="DateTime">
+    {{ now()->translatedFormat('d F, Y року') }}
+</div>
 
 <div class="flex-container">
     {{-- ЛІВА ПАНЕЛЬ (САЙДБАР) --}}
@@ -36,7 +30,7 @@
                 {{-- ПЕРЕВІРКА АВТОРИЗАЦІЇ --}}
                 @auth
                     {{-- Якщо зайшов адмін: показуємо кнопку входу в панель та виходу --}}
-                    <li><a href="{{ route('admin') }}">Панель адміна</a></li>
+                    <li><a href="{{ route('admin.index') }}">Панель адміна</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}" class="logout-form">
                             @csrf

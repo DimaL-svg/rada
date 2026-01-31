@@ -78,9 +78,7 @@
 
 {{-- Сесія: Виводить спливаюче повідомлення, якщо контролер повернув відповідь 'success' --}}
 @if(session('success'))
-    <div class="alert alert-success alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-check"></i> Успішно!</h5>
-        {{ session('success') }}
-    </div>
+    <script>
+        alert("{{ session('success') }}");
+    </script>
 @endif
