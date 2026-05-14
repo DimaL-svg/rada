@@ -26,7 +26,10 @@ class CategoryResource extends Resource
     protected static ?string $navigationLabel = 'Категорії';
     protected static ?string $modelLabel = 'Категорія';
     protected static ?string $pluralModelLabel = 'Категорії';
-
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->role === 'admin';
+    }
     public static function form(Form $form): Form
     {
         return $form

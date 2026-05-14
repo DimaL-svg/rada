@@ -79,7 +79,7 @@
 </li>
         @else
             <li>
-                <a href="{{ route('login') }}">Авторизація</a>
+                <a href="{{ url('/admin/login') }}">Увійти</a>
             </li>
         @endauth
 

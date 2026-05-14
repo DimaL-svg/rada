@@ -21,6 +21,11 @@ class UserResource extends Resource
     protected static ?string $modelLabel = 'Користувач';
     protected static ?string $pluralModelLabel = 'Користувачі';
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->role === 'admin';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -40,6 +45,7 @@ class UserResource extends Resource
                                     ->required()
                                     ->unique(ignoreRecord: true),
                             ])->columnSpan(2),
+
                         Section::make('Доступ')
                             ->schema([
                                 Forms\Components\Select::make('role')
@@ -56,8 +62,10 @@ class UserResource extends Resource
                                     ->label('Активний')
                                     ->helperText('Вимкніть для блокування входу')
                                     ->default(true)
+                                    // Забороняємо деактивувати себе або головного адміна
                                     ->disabled(fn ($record) => $record && ($record->id === 1 || $record->id === auth()->id())),
                             ])->columnSpan(1),
+
                         Section::make('Безпека')   
                             ->schema([
                                 Forms\Components\TextInput::make('password')
@@ -124,7 +132,6 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                 
                     ->hidden(fn ($record) => $record->id === 1 || $record->id === auth()->id()),
             ]);
     }
